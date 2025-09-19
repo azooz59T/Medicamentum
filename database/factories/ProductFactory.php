@@ -1,7 +1,7 @@
 <?php
 
 namespace Database\Factories;
-
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -10,6 +10,13 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class ProductFactory extends Factory
 {
     /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = Product::class;
+
+    /**
      * Define the model's default state.
      *
      * @return array<string, mixed>
@@ -17,7 +24,8 @@ class ProductFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => $this->faker->unique()->word() . ' ' . $this->faker->unique()->word(),
+            'price' => $this->faker->randomFloat(2, 0, 999), // Generates a random price with 2 decimal places, between 1 and 999
         ];
     }
 }
