@@ -20,7 +20,18 @@
 
     <div class="container mt-5">
         <h1 class="mb-4">Our Products</h1>
-        
+        <div>
+            @guest
+                <a href="{{ route('login') }}" class="btn btn-outline-primary me-2">Login</a>
+                <a href="{{ route('register') }}" class="btn btn-primary">Register</a>
+            @else
+                <span class="me-3">Hello, {{ Auth::user()->name }}</span>
+                <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                    @csrf
+                    <button type="submit" class="btn btn-outline-secondary">Logout</button>
+                </form>
+            @endguest
+        </div>
         <!-- Simple Search and Sort -->
         <div class="row mb-4">
             <div class="col-md-12">
