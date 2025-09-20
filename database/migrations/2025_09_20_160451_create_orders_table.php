@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('phone');
+            $table->text('address');
+            $table->json('cart_items'); // Store cart data as JSON
+            $table->decimal('total_amount', 10, 2);
+            $table->string('status')->default('pending');
             $table->timestamps();
         });
     }
