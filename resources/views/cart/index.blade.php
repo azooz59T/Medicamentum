@@ -77,6 +77,13 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-12 mt-3">
+                    <div class="d-grid">
+                        <a href="{{ route('checkout.index') }}" class="btn btn-success btn-lg">
+                            <i class="fas fa-credit-card me-2"></i>Proceed to Checkout
+                        </a>
+                    </div>
+                </div>
             </div>
         @endif
     </div>
