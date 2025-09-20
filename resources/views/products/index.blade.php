@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Home</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
     <!-- Success Popup -->
@@ -66,8 +68,8 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ $product->name }}</h5>
                             <p class="card-text">${{ number_format($product->price, 2) }}</p>
-                            <button onclick="addToCart('{{ $product->name }}')" class="btn btn-primary">
-                                Add To Cart
+                            <button onclick="addToCart({{ $product->id }})" class="btn btn-primary" id="btn-{{ $product->id }}">
+                                <i class="fas fa-cart-plus me-1"></i>Add To Cart
                             </button>
                         </div>
                     </div>
@@ -77,23 +79,77 @@
 
         <div class="d-flex justify-content-center">
             {{ $products->appends(request()->query())->links('pagination::bootstrap-4') }}
+            <a href="{{ route('cart.index') }}" class="group block p-2 rounded-lg hover:bg-gray-100 ms-3 position-relative">
+                @svg('bxs-cart-alt', 'w-6 h-6 text-gray-900 group-hover:text-blue-500')
+                <span id="cartBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" 
+                      style="{{ session()->has('cart') && array_sum(session('cart', [])) > 0 ? '' : 'display: none;' }}">
+                    {{ session()->has('cart') ? array_sum(session('cart', [])) : 0 }}
+                </span>
+            </a>
         </div>
     </div>
 
     <script>
-        function addToCart(productName) {
-            // Show the success popup
-            const popup = document.getElementById('successPopup');
-            popup.style.display = 'block';
+        // CSRF token for AJAX requests
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        function addToCart(productId) {
+            const button = document.getElementById(`btn-${productId}`);
+            const originalText = button.innerHTML;
             
-            // Auto-hide after 2 seconds
-            setTimeout(function() {
-                popup.style.display = 'none';
-            }, 2000);
+            // Show loading state
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Adding...';
             
-            // Optional: Add your actual add to cart logic here
-            // For example, make an AJAX request to your backend
-            console.log('Product added to cart: ' + productName);
+            fetch('/cart/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify({
+                    product_id: productId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Show success popup
+                    const popup = document.getElementById('successPopup');
+                    popup.style.display = 'block';
+                    
+                    // Update cart badge
+                    updateCartBadge(data.cartCount);
+                    
+                    // Auto-hide popup after 2 seconds
+                    setTimeout(function() {
+                        popup.style.display = 'none';
+                    }, 2000);
+                } else {
+                    alert('Error adding product to cart');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while adding the product to cart');
+            })
+            .finally(() => {
+                // Restore button
+                button.disabled = false;
+                button.innerHTML = originalText;
+            });
+        }
+
+        // Display product quantity in cart
+        function updateCartBadge(count) {
+            const badge = document.getElementById('cartBadge');
+            
+            if (count > 0) {
+                badge.textContent = count;
+                badge.style.display = 'inline-block';
+            } else {
+                badge.style.display = 'none';
+            }
         }
     </script>
 </body>
