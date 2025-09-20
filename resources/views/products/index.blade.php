@@ -77,6 +77,9 @@
 
         <div class="d-flex justify-content-center">
             {{ $products->appends(request()->query())->links('pagination::bootstrap-4') }}
+            <a href="#" class="group block p-2 rounded-lg hover:bg-gray-100">
+                @svg('bxs-cart-alt', 'w-6 h-6 text-gray-900 group-hover:text-blue-500')
+            </a>
         </div>
     </div>
 
