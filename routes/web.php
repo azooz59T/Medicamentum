@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\OrderController;
 
 Route::get('/', [ProductController::class, 'index'])->name('products.index');
 
@@ -31,4 +32,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // This creates all CRUD operations except displaying an individual product 
     Route::resource('products', ProductController::class)->except(['index', 'show']);
 });
+
+Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
+
 require __DIR__.'/auth.php';
