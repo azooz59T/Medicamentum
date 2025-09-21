@@ -30,7 +30,8 @@ class ProductFactory extends Factory
             'Dressings', 'Strapping', 'Tablets', 'Insoles', 
             'Gloves, masks, aprons', 'Steriliser trays and pouches', 'Wheelchair'
             ]),
-            'description' => $this->faker->sentence(10)
+            'description' => $this->faker->sentence(10),
+            'stock' => $this->faker->numberBetween(0, 100), // Random stock between 0-100
         ];
     }
 }
