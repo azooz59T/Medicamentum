@@ -71,6 +71,19 @@
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
+                        <div>
+                            <label for="stock" class="block text-sm font-medium text-gray-700">Stock Quantity</label>
+                            <input type="number" 
+                                   name="stock" 
+                                   id="stock" 
+                                   min="0"
+                                   value="{{ old('stock', 0) }}"
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('stock') border-red-500 @enderror"
+                                   required>
+                            @error('stock')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
 
                         <div>
                             <label for="image" class="block text-sm font-medium text-gray-700">Product Image</label>

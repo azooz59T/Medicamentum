@@ -98,7 +98,8 @@ class ProductController extends Controller
             'category' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0|max:999.99',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'stock' => 'required|integer|min:0',
         ]);
 
         if ($request->hasFile('image')) {
@@ -131,7 +132,8 @@ class ProductController extends Controller
             'category' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0|max:999.99',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'stock' => 'required|integer|min:0',
         ]);
 
         if ($request->hasFile('image')) {

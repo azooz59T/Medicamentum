@@ -17,7 +17,8 @@ class Product extends Model
         'category',
         'description',
         'image',
-        'price'
+        'price',
+        'stock'
     ];
 
     // converts an attribute's value to a more usable data type from the database
@@ -27,4 +28,32 @@ class Product extends Model
 
     // Define what dates should be treated as Carbon instances
     protected $dates = ['deleted_at'];
+
+        /**
+     * Check if product is in stock
+     */
+    public function isInStock($quantity = 1)
+    {
+        return $this->stock >= $quantity;
+    }
+
+    /**
+     * Check if product is out of stock
+     */
+    public function isOutOfStock()
+    {
+        return $this->stock <= 0;
+    }
+
+    /**
+     * Reduce stock when product is purchased
+     */
+    public function reduceStock($quantity)
+    {
+        if ($this->stock >= $quantity) {
+            $this->decrement('stock', $quantity);
+            return true;
+        }
+        return false;
+    }
 }
