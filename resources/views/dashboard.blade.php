@@ -17,8 +17,9 @@
             <div class="mt-8 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="flex justify-around items-center my-3">
                     <h3 class="text-lg font-semibold">Manage Products</h3>
+                    <a href="{{ route('products.index') }}" class="btn btn-info">Products</a>
                     <a href="{{ route('admin.products.create') }}" 
-                        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                        class="btn btn-success">
                         Create New Product
                     </a>
                 </div>
