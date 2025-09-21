@@ -18,6 +18,10 @@
                 <div class="flex justify-around items-center my-3">
                     <h3 class="text-lg font-semibold">Manage Products</h3>
                     <a href="{{ route('products.index') }}" class="btn btn-info">Products</a>
+                    <a href="{{ route('orders.index') }}" 
+                               class="btn btn-warning">
+                                Orders
+                            </a>
                     <a href="{{ route('admin.products.create') }}" 
                         class="btn btn-success">
                         Create New Product
