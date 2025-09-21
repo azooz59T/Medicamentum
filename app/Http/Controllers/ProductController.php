@@ -16,9 +16,25 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
+        $products = $this->getFilteredProducts($request, 8);
+        return view('products.index', compact('products'));
+    }
+
+    // Admin index method (GET /admin/products)
+    public function adminIndex(Request $request)
+    {
+        $products = $this->getFilteredProducts($request, 20);
+        return view('dashboard', compact('products'));
+    }
+
+    /**
+     * Get filtered and sorted products with pagination
+     */
+    private function getFilteredProducts(Request $request, int $perPage = 12)
+    {
         $query = Product::query();
         
-        // search for products by name using Wildcard `LIKE`
+        // Search for products by name using Wildcard `LIKE`
         if ($request->search) {
             $searchTerm = $request->search;
             $query->where('name', 'LIKE', "%{$searchTerm}%");
@@ -42,16 +58,7 @@ class ProductController extends Controller
         }
         
         // Paginate results (preserve query parameters)
-        $products = $query->paginate(8)->withQueryString();
-        
-        return view('products.index', compact('products'));
-    }
-
-    // Admin index method (GET /admin/products)
-    public function adminIndex()
-    {
-        $products = Product::latest()->paginate(20); // More items per page for admin
-        return view('dashboard', compact('products'));
+        return $query->paginate($perPage)->withQueryString();
     }
 
     // Show create form (GET /admin/products/create)

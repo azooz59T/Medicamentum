@@ -22,6 +22,9 @@
                         Create New Product
                     </a>
                 </div>
+
+                <x-product-search :action="route('dashboard')" />
+                </div>
                     
                     <div class="overflow-x-auto">
                         <table class="min-w-full table-auto border-collapse border border-gray-300">
