@@ -41,6 +41,7 @@ class CheckoutController extends Controller
 
     public function store(Request $request)
     {
+        
         $request->validate([
             'name' => 'required|string|min:10|regex:/^[a-zA-Z\s]+$/',
             'phone' => 'required|digits:11',
@@ -48,14 +49,28 @@ class CheckoutController extends Controller
         ]);
 
         $cart = session()->get('cart', []);
-        
+
         if (empty($cart)) {
             return redirect()->route('cart.index')->with('error', 'Your cart is empty');
         }
 
-        // Get cart items with product details for storage
-        $cartItems = [];
+        // Check stock for each item BEFORE processing order
+        foreach ($cart as $productId => $quantity) {
+            $product = Product::find($productId);
+            
+            if (!$product) {
+                return redirect()->route('cart.index')
+                    ->with('error', "Product no longer exists!");
+            }
+            
+            if (!$product->isInStock($quantity)) {
+                return redirect()->route('cart.index')
+                    ->with('error', "Sorry, {$product->name} is out of stock or doesn't have enough quantity. Available: {$product->stock}");
+            }
+        }
+
         $total = 0;
+        $orderItems = []; // Use different variable name
 
         $productIds = array_keys($cart);
         $products = Product::whereIn('id', $productIds)->get();
@@ -64,7 +79,7 @@ class CheckoutController extends Controller
             $quantity = $cart[$product->id];
             $subtotal = $product->price * $quantity;
             
-            $cartItems[] = [
+            $orderItems[] = [
                 'product_id' => $product->id,
                 'name' => $product->name,
                 'price' => $product->price,
@@ -80,9 +95,15 @@ class CheckoutController extends Controller
             'name' => $request->name,
             'phone' => $request->phone,
             'address' => $request->address,
-            'cart_items' => $cartItems,
+            'cart_items' => $orderItems, // Use the new variable
             'total_amount' => $total
         ]);
+
+        // Reduce stock for each purchased item using original cart structure
+        foreach ($cart as $productId => $quantity) {
+            $product = Product::find($productId);
+            $product->reduceStock($quantity);
+        }
 
         // Clear cart
         session()->forget('cart');
