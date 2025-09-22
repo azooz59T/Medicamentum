@@ -64,9 +64,6 @@ To run the project you need to have local server packages such as XAMPP or WAMP,
         php artisan storage:link
     ```
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 <!-- USAGE EXAMPLES -->
 ## Usage
@@ -75,4 +72,3 @@ You can login as an admin with the following credentials
 - (email: ahmed.fawzy@national-g.com)
 (password: admin123)
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
