@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -19,6 +17,9 @@ class AdminUserSeeder extends Seeder
             'email' => 'ahmed.fawzy@national-g.com',
             'email_verified_at' => now(),
             'password' => Hash::make('admin123'),
+            // Add any additional fields you have
+            // 'role' => 'admin',
+            // 'is_admin' => true,
         ]);
     }
 }
